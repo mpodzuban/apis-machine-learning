@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from flask import Flask
 from flask import request
 from flask_cors import CORS
@@ -21,7 +23,11 @@ def predict():
         response.append({key: fore[key]
                          for key in fore if key in ["ds", "trend", "yhat"]})
         response[-1]["ds"] = str(response[-1]["ds"])
-    return json.dumps(response), 200
+    dd = defaultdict(list)
+    for d in response:
+        for key, value in d.items():
+            dd[key].append(value)
+    return json.dumps(dd), 200
 
 
 if __name__ == "__main__":
